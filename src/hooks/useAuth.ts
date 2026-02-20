@@ -38,20 +38,18 @@ export function useRegister() {
 }
 
 /**
- * Sends a Google ID token (from <GoogleLogin> onSuccess) to the backend.
- * Use this inside the GoogleButton component's onSuccess callback:
- *
- *   const { mutate } = useGoogleAuth()
- *   <GoogleLogin onSuccess={({ credential }) => credential && mutate(credential)} />
+ * Sends a Google OAuth access token to the backend.
+ * The backend endpoint POST /api/auth/google/ must accept { access_token }
+ * and verify it via Google's tokeninfo/userinfo endpoint.
  */
 export function useGoogleAuth() {
   const { login } = useAuthStore()
   const router = useRouter()
 
   return useMutation({
-    mutationFn: (credential: string) =>
+    mutationFn: (access_token: string) =>
       api
-        .post<LoginResponse>('/auth/google/', { credential })
+        .post<LoginResponse>('/auth/google/', { access_token })
         .then((r) => r.data),
     onSuccess: (data) => {
       login(data.user, data.access, data.refresh)
