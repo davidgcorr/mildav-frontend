@@ -1,7 +1,8 @@
 import { createFileRoute, redirect, Outlet, Link } from '@tanstack/react-router'
+import { Loader2 } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useLogout } from '@/hooks/useAuth'
-import { Button } from '@/components/ui/Button'
+import { Button } from '@/components/ui/button'
 
 // Layout route for authenticated pages.
 // Any child route is automatically protected.
@@ -37,9 +38,10 @@ function ProtectedLayout() {
             <Button
               variant="secondary"
               size="sm"
-              loading={isPending}
+              disabled={isPending}
               onClick={() => logout()}
             >
+              {isPending && <Loader2 className="animate-spin" />}
               Sign out
             </Button>
           </div>

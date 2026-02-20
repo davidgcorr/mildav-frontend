@@ -1,20 +1,18 @@
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
+import { Loader2 } from 'lucide-react'
 import { registerSchema, type RegisterFormValues } from '@/schemas/auth'
 import { useRegister } from '@/hooks/useAuth'
 import { getApiError } from '@/lib/errors'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 
 export function RegisterForm() {
   const { mutate: register_, isPending, error } = useRegister()
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-  } = useForm<RegisterFormValues>({
+  const form = useForm<RegisterFormValues>({
     resolver: zodResolver(registerSchema),
   })
 
@@ -23,73 +21,113 @@ export function RegisterForm() {
   const apiError = error ? getApiError(error) : null
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
-      <div className="grid grid-cols-2 gap-4">
-        <Input
-          label="First name"
-          type="text"
-          autoComplete="given-name"
-          error={errors.first_name?.message}
-          {...register('first_name')}
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
+        <div className="grid grid-cols-2 gap-4">
+          <FormField
+            control={form.control}
+            name="first_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>First name</FormLabel>
+                <FormControl>
+                  <Input type="text" autoComplete="given-name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="last_name"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Last name</FormLabel>
+                <FormControl>
+                  <Input type="text" autoComplete="family-name" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <FormField
+          control={form.control}
+          name="username"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Username</FormLabel>
+              <FormControl>
+                <Input type="text" autoComplete="username" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-        <Input
-          label="Last name"
-          type="text"
-          autoComplete="family-name"
-          error={errors.last_name?.message}
-          {...register('last_name')}
+
+        <FormField
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Email</FormLabel>
+              <FormControl>
+                <Input type="email" autoComplete="email" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
         />
-      </div>
 
-      <Input
-        label="Username"
-        type="text"
-        autoComplete="username"
-        error={errors.username?.message}
-        {...register('username')}
-      />
+        <FormField
+          control={form.control}
+          name="password"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Password</FormLabel>
+              <FormControl>
+                <Input type="password" autoComplete="new-password" {...field} />
+              </FormControl>
+              <FormDescription>Min 8 characters, one uppercase letter, one number.</FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <Input
-        label="Email"
-        type="email"
-        autoComplete="email"
-        error={errors.email?.message}
-        {...register('email')}
-      />
+        <FormField
+          control={form.control}
+          name="password_confirm"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirm password</FormLabel>
+              <FormControl>
+                <Input type="password" autoComplete="new-password" {...field} />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
-      <Input
-        label="Password"
-        type="password"
-        autoComplete="new-password"
-        error={errors.password?.message}
-        hint="Min 8 characters, one uppercase letter, one number."
-        {...register('password')}
-      />
+        {apiError && (
+          <p role="alert" className="rounded-md bg-destructive/10 px-3 py-2 text-sm text-destructive">
+            {apiError}
+          </p>
+        )}
 
-      <Input
-        label="Confirm password"
-        type="password"
-        autoComplete="new-password"
-        error={errors.password_confirm?.message}
-        {...register('password_confirm')}
-      />
+        <Button type="submit" disabled={isPending} className="mt-2 w-full">
+          {isPending && <Loader2 className="animate-spin" />}
+          Create account
+        </Button>
 
-      {apiError && (
-        <p role="alert" className="rounded-md bg-red-50 px-3 py-2 text-sm text-red-700">
-          {apiError}
+        <p className="text-center text-sm text-muted-foreground">
+          Already have an account?{' '}
+          <Link to="/login" className="font-medium text-primary hover:text-primary/80">
+            Sign in
+          </Link>
         </p>
-      )}
-
-      <Button type="submit" loading={isPending} className="mt-2 w-full">
-        Create account
-      </Button>
-
-      <p className="text-center text-sm text-gray-600">
-        Already have an account?{' '}
-        <Link to="/login" className="font-medium text-primary-600 hover:text-primary-500">
-          Sign in
-        </Link>
-      </p>
-    </form>
+      </form>
+    </Form>
   )
 }
