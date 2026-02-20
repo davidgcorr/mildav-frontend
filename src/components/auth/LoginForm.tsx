@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { loginSchema, type LoginFormValues } from '@/schemas/auth'
 import { useLogin } from '@/hooks/useAuth'
+import { getApiError } from '@/lib/errors'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 
@@ -19,18 +20,16 @@ export function LoginForm() {
 
   const onSubmit = (data: LoginFormValues) => login(data)
 
-  // Extract a human-readable error message from the API response
-  const apiError =
-    error instanceof Error ? error.message : error ? 'Login failed. Please try again.' : null
+  const apiError = error ? getApiError(error) : null
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
       <Input
-        label="Username"
-        type="text"
-        autoComplete="username"
-        error={errors.username?.message}
-        {...register('username')}
+        label="Email"
+        type="email"
+        autoComplete="email"
+        error={errors.email?.message}
+        {...register('email')}
       />
 
       <Input

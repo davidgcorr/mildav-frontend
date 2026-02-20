@@ -3,6 +3,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { Link } from '@tanstack/react-router'
 import { registerSchema, type RegisterFormValues } from '@/schemas/auth'
 import { useRegister } from '@/hooks/useAuth'
+import { getApiError } from '@/lib/errors'
 import { Button } from '@/components/ui/Button'
 import { Input } from '@/components/ui/Input'
 
@@ -19,8 +20,7 @@ export function RegisterForm() {
 
   const onSubmit = (data: RegisterFormValues) => register_(data)
 
-  const apiError =
-    error instanceof Error ? error.message : error ? 'Registration failed. Please try again.' : null
+  const apiError = error ? getApiError(error) : null
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4" noValidate>
