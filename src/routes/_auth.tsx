@@ -18,7 +18,7 @@ function AuthLayout() {
     <div className="flex min-h-screen items-center justify-center bg-gray-50 px-4 py-12">
       <div className="w-full max-w-md space-y-8">
         <div className="text-center">
-          <h1 className="text-3xl font-bold tracking-tight text-gray-900">Mildav</h1>
+          <h1 className="text-3xl font-semibold tracking-tight text-gray-900">mildav.ai</h1>
         </div>
         <div className="rounded-xl bg-white p-8 shadow-sm ring-1 ring-gray-200">
           <Outlet />
