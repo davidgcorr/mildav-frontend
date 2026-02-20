@@ -37,6 +37,29 @@ export function useRegister() {
   })
 }
 
+/**
+ * Sends a Google ID token (from <GoogleLogin> onSuccess) to the backend.
+ * Use this inside the GoogleButton component's onSuccess callback:
+ *
+ *   const { mutate } = useGoogleAuth()
+ *   <GoogleLogin onSuccess={({ credential }) => credential && mutate(credential)} />
+ */
+export function useGoogleAuth() {
+  const { login } = useAuthStore()
+  const router = useRouter()
+
+  return useMutation({
+    mutationFn: (credential: string) =>
+      api
+        .post<LoginResponse>('/auth/google/', { credential })
+        .then((r) => r.data),
+    onSuccess: (data) => {
+      login(data.user, data.access, data.refresh)
+      router.navigate({ to: '/dashboard' })
+    },
+  })
+}
+
 export function useLogout() {
   const { logout, refreshToken } = useAuthStore()
   const queryClient = useQueryClient()

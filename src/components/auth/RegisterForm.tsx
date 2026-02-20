@@ -9,6 +9,7 @@ import { getApiError } from '@/lib/errors'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { GoogleButton } from '@/components/auth/GoogleButton'
 
 export function RegisterForm() {
   const { mutate: register_, isPending, error } = useRegister()
@@ -109,6 +110,14 @@ export function RegisterForm() {
           {isPending && <Loader2 className="animate-spin" />}
           Create account
         </Button>
+
+        <div className="relative my-1 flex items-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-xs text-muted-foreground">or</span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+
+        <GoogleButton />
 
         <p className="text-center text-sm text-muted-foreground">
           Already have an account?{' '}

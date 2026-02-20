@@ -9,6 +9,7 @@ import { getApiError } from '@/lib/errors'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { GoogleButton } from '@/components/auth/GoogleButton'
 
 export function LoginForm() {
   const { mutate: login, isPending, error } = useLogin()
@@ -78,6 +79,14 @@ export function LoginForm() {
           {isPending && <Loader2 className="animate-spin" />}
           Sign in
         </Button>
+
+        <div className="relative my-1 flex items-center gap-3">
+          <div className="h-px flex-1 bg-border" />
+          <span className="text-xs text-muted-foreground">or</span>
+          <div className="h-px flex-1 bg-border" />
+        </div>
+
+        <GoogleButton />
 
         <p className="text-center text-sm text-muted-foreground">
           Don&apos;t have an account?{' '}
